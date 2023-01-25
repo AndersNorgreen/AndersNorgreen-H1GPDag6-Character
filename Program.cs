@@ -8,6 +8,7 @@ namespace H1GPDag6
     class Program
     {
         static List<Character> characters = new List<Character>();
+        static List<Character> party = new List<Character>();
 
         static void Main(string[] args)
         {
@@ -26,14 +27,15 @@ namespace H1GPDag6
             WriteLine("Velkommen til TECs RPG karaktergenerator!" + Environment.NewLine);
             WriteLine("1. Ny karakter");
             WriteLine("2. Se karaterer");
-            WriteLine("3. Afslut" + Environment.NewLine);
+            WriteLine("3. Se holdet");
+            WriteLine("4. Afslut" + Environment.NewLine);
 
 
             int menuChoice;
             do
             {
                 Write("Vælg en mulighed fra menuen: ");
-            } while (!Int32.TryParse(ReadLine(), out menuChoice) || menuChoice < 1 || menuChoice > 3);
+            } while (!Int32.TryParse(ReadLine(), out menuChoice) || menuChoice < 1 || menuChoice > 4);
 
             switch (menuChoice)
             {
@@ -46,9 +48,26 @@ namespace H1GPDag6
                     ViewAllCharacters();
                     break;
                 case 3:
+                    Clear();
+                    ShowParty();
+                    break;
+                case 4:
                     Quit();
                     break;
             }
+        }
+
+        private static void ShowParty()
+        {
+            foreach (Character partyMember in party)
+            {
+                partyMember.ShowCharacter();
+                WriteLine();
+            }
+
+            WriteLine("Tryk en tast for at vende tilbage til hovedmenuen...");
+            ReadKey();
+            MainMenu();
         }
 
         private static void ViewAllCharacters()
@@ -76,9 +95,25 @@ namespace H1GPDag6
             {
                 characters[menuChoice - 1].ShowCharacter();
 
-                WriteLine(Environment.NewLine + "Tryk en tast for at vende tilbage til hovedmenuen");
-                ReadKey();
-                MainMenu();
+                WriteLine(Environment.NewLine + "1. Tilføj karakter til holdet");
+                WriteLine("2. Vend tilbage til hovedmenuen");
+
+                int subMenuChoice;
+                do
+                {
+                    Write("Vælg en mulighed fra menuen: ");
+                } while (!Int32.TryParse(ReadLine(), out subMenuChoice) || subMenuChoice < 1 || subMenuChoice > 2);
+
+                if (subMenuChoice == 1)
+                {
+                    party.Add(characters[menuChoice - 1]);
+                    WriteLine("Tak, helten er nu tilføjet til vores hold!");
+                    WriteLine("Tryk en tast for at vende tilbage...");
+                    ReadKey();
+                    ViewAllCharacters();
+                }
+                else if (subMenuChoice == 2)
+                    MainMenu();
             }
         }
 
